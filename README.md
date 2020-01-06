@@ -49,3 +49,16 @@ from app import db
 db.create_all()
 db.drop_all()
 ```
+# flask自定义命令
+```python
+import click
+# 自定义命令 initdb
+@app.cli.command() # 注册为命令
+@click.option('--drop', is_flag=True, help='Create after drop.')  # 设置选项
+def initdb(drop):
+    """Initialize the database."""
+    if drop:    # 判断是否出入了选项
+        db.drop_all()
+    db.create_all()
+    click.echo('Initialized databases.')  # 输出提示信息
+```
