@@ -1,6 +1,20 @@
-from flask import Flask,render_template
+import os
+import sys
+from flask import Flask, render_template
 from flask import url_for
+from flask_sqlalchemy import SQLAlchemy  # 导入扩展类
+WIN = sys.platform.startswith('win')
+if WIN:
+    prefix = 'sqlite:///'
+else:
+    prefix = 'sqlite:////'
+
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(
+    app.root_path, 'data.db'
+)
+app.config['SQLALCHEMY_TRACE_MODIFICATIONS'] = False  # 关闭对模型修改的监控
+db = SQLAlchemy(app)  # 初始化扩展 ，传入程序实例
 
 name = 'Zhenghl'
 # 列表
@@ -24,6 +38,7 @@ def index():
                            movies=movies)
 
 
+'''
 @app.route('/user/<names>')
 def user_page(names):
     return 'User :%s' % names
@@ -40,5 +55,5 @@ def test_url_for():
     print(url_for('test_url_for', num=2))
 
     return 'Test page'
-
+'''
 
