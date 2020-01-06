@@ -7,11 +7,11 @@
 <body>
 <h2>{{ name }}'s Watchlist</h2>
 {# 使用length 过滤器获取movies 变量的长度 #}
-<p>{{movies|length}} Titles</p>
+<p>{{ movies|length }} Titles</p>
 <ul>
-    {% for movie in movies %｝{# 迭代movies变量 #}
+    {% for movie in movies  %}  {# 迭代movies变量 #}
     <li>{{movie.title}} - {{movie.year}}</li> {# 等同于movie['title'] #}
-    {% endfor %｝｛# 使用endfor 标签结束 for语句 #｝
+    {% endfor %}  {# 使用endfor 标签结束 for语句 #}
 </ul>
 <footer>
     <small>&copy; 2020 <a href="http://www.baidu.com">helloflask</a></small>
