@@ -12,7 +12,7 @@
 -->
 <body>
 <img class="avatar" src="{{  url_for('static',filename='images/ico.jpg') }}" alt="Avatar">
-<h2>{{ name }}'s Watchlist</h2>
+<h2>{{ user.name }}'s Watchlist</h2>
 {# 使用length 过滤器获取movies 变量的长度 #}
 <p>{{ movies|length }} Titles</p>
 <ul class="movie-list">

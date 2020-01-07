@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(
     app.root_path, 'data.db'
 )
-app.config['SQLALCHEMY_TRACE_MODIFICATIONS'] = False  # 关闭对模型修改的监控
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
 db = SQLAlchemy(app)  # 初始化扩展 ，传入程序实例
 
 
@@ -30,7 +30,7 @@ class Movie(db.Model):  # 表名会是movie
 
 
 # 自定义命令 initdb
-@app.cli.command() # 注册为命令
+@app.cli.command()  # 注册为命令
 @click.option('--drop', is_flag=True, help='Create after drop.')  # 设置选项
 def initdb(drop):
     """Initialize the database."""
@@ -40,6 +40,35 @@ def initdb(drop):
     click.echo('Initialized databases.')  # 输出提示信息
 
 
+# 生成虚拟数据
+@app.cli.command()
+def forge():
+    """Generate fake data."""
+    db.create_all()
+    name = 'Zhenghl'
+    # 列表
+    movies = [
+        {'title': 'My Neighbor Totoro', 'year': '1984'},
+        {'title': 'Dead Poets Society', 'year': '1989'},
+        {'title': 'A Perfect World', 'year': '1986'},
+        {'title': 'Leon', 'year': '1987'},
+        {'title': 'Mahjong', 'year': '1998'},
+        {'title': 'Swallowtail Butterfly', 'year': '1980'},
+        {'title': 'King of Comedy', 'year': '1986'},
+        {'title': 'Devils on the Doorstep', 'year': '1988'},
+        {'title': 'WALL-E', 'year': '1981'},
+        {'title': 'The Pork of Music', 'year': '1984'},
+    ]
+    user = User(name=name)
+    db.session.add(user)
+    for m in movies:
+        movie = Movie(title=m['title'], year=m['year'])
+        db.session.add(movie)
+
+    db.session.commit()
+
+
+'''
 name = 'Zhenghl'
 # 列表
 movies = [
@@ -54,13 +83,14 @@ movies = [
     {'title': 'WALL-E', 'year': '1981'},
     {'title': 'The Pork of Music', 'year': '1984'},
 ]
-
+'''
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', name=name,
-                           movies=movies)
+    user = User.query.first()
+    movies = Movie.query.all()
+    return render_template('index.html', user=user, movies=movies)
 
 
 '''
