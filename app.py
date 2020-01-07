@@ -1,9 +1,11 @@
 import os
 import sys
-from flask import Flask, render_template
+
 import click
+from flask import Flask, render_template
 # from flask import url_for
 from flask_sqlalchemy import SQLAlchemy  # 导入扩展类
+
 WIN = sys.platform.startswith('win')
 if WIN:
     prefix = 'sqlite:///'
@@ -24,9 +26,9 @@ class User(db.Model):  # 表名会是user (自动生成。小写处理)
 
 
 class Movie(db.Model):  # 表名会是movie
-    id = db.Column(db.Integer, primary_key=type)  #主键
+    id = db.Column(db.Integer, primary_key=type)  # 主键
     title = db.Column(db.String(60))  # 电影标题
-    year = db.Column(db.String(4))    # 电影年份
+    year = db.Column(db.String(4))  # 电影年份
 
 
 # 自定义命令 initdb
@@ -34,7 +36,7 @@ class Movie(db.Model):  # 表名会是movie
 @click.option('--drop', is_flag=True, help='Create after drop.')  # 设置选项
 def initdb(drop):
     """Initialize the database."""
-    if drop:    # 判断是否出入了选项
+    if drop:  # 判断是否出入了选项
         db.drop_all()
     db.create_all()
     click.echo('Initialized databases.')  # 输出提示信息
@@ -86,11 +88,31 @@ movies = [
 '''
 
 
+# 模版上下文处理函数  对于多个模版内都需要使用的变量 使用app.context_processor 装饰器注册一个模版上下文处理函数
+@app.context_processor
+def inject_user():  # 函数名可以随意修改
+    user = User.query.first()
+    return dict(user=user)  # 需要返回字典，等同于return {'user':user}
+
+
+'''
+这个函数返回的变量将会统一注入到每一个模版中的上下文环境中，因此可以直接在模版中使用
+'''
+
+
 @app.route('/')
 def index():
-    user = User.query.first()
+    # user = User.query.first()
     movies = Movie.query.all()
-    return render_template('index.html', user=user, movies=movies)
+    # return render_template('index_bak.html', user=user, movies=movies)
+    return render_template('index.html',  movies=movies)
+
+
+@app.errorhandler(404)  # 出入要处理的错误代码
+def page_not_found(e):  # 接收异常对象作为参数
+    # user = User.query.first()
+    # return render_template('404.html', user=user), 404  # 返回模版和状态码
+    return render_template('404.html'), 404  # 返回模版和状态码
 
 
 '''
@@ -111,4 +133,3 @@ def test_url_for():
 
     return 'Test page'
 '''
-

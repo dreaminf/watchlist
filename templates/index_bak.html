@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.name }}'s Watchlist</title>
+    <link rel="icon" href="{{  url_for('static',filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}" type="text/css">
+</head>
+<!--
+提示 在 Python 脚本里， url_for() 函数需要从 flask 包中导入，而在模 板中则可以直接使用，因为 Flask
+把一些常用的函数和对象添加到了模板上下 文（环境）里。
+-->
+<body>
+<img class="avatar" src="{{  url_for('static',filename='images/ico.jpg') }}" alt="Avatar">
+<h2>{{ user.name }}'s Watchlist</h2>
+{# 使用length 过滤器获取movies 变量的长度 #}
+<p>{{ movies|length }} Titles</p>
+<ul class="movie-list">
+    {% for movie in movies  %}  {# 迭代movies变量 #}
+    <li>{{movie.title}} - {{movie.year}}</li> {# 等同于movie['title'] #}
+    {% endfor %}  {# 使用endfor 标签结束 for语句 #}
+</ul>
+<footer>
+    <small>&copy; 2020 <a href="http://www.baidu.com">helloflask</a></small>
+</footer>
+<img class="totoro" src="{{  url_for('static',filename='images/foo.jpg') }}" alt="Walking Totoro">
+
+</body>
+</html>
