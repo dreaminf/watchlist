@@ -62,3 +62,7 @@ def initdb(drop):
     db.create_all()
     click.echo('Initialized databases.')  # 输出提示信息
 ```
+# Flask-login 提供了实现用户认证所需的各类功能函数
+```python
+pip install flask-login
+```
