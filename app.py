@@ -51,7 +51,7 @@ def initdb(drop):
     if drop:  # 判断是否出入了选项
         db.drop_all()
     db.create_all()
-    click.echo('Initialized databases.')  # 输出提示信息
+    click.echo('Initialized database.')  # 输出提示信息
 
 
 # 生成虚拟数据
@@ -80,6 +80,7 @@ def forge():
         db.session.add(movie)
 
     db.session.commit()
+    click.echo('Done.')
 
 
 @app.cli.command()
@@ -90,11 +91,11 @@ def admin(username, password):
     db.create_all()
     user = User.query.first()
     if user is not None:
-        click.echo('Updating user ... ')
+        click.echo('Updating user... ')
         user.username = username
         user.set_password(password)  # 设置密码
     else:
-        click.echo('Creating user ...')
+        click.echo('Creating user...')
         user = User(username=username, name='Admin')
         user.set_password(password)
         db.session.add(user)
@@ -146,7 +147,7 @@ def index():
         movie = Movie(title=title, year=year)  # 创建记录
         db.session.add(movie)  # 添加到数据回话
         db.session.commit()  # 提交数据回话
-        flash('Item created')  # 显示成功创建的提示
+        flash('Item created.')  # 显示成功创建的提示
         return redirect(url_for('index'))  # 重定向回首页
     # user = User.query.first()
     movies = Movie.query.all()
